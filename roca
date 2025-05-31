@@ -1,0 +1,75 @@
+#ifndef ROCA_H
+#define ROCA_H
+
+#include <Adafruit_ILI9341.h>
+
+extern Adafruit_ILI9341 screen;
+
+const uint8_t ROCA_WIDTH = 20;
+const uint8_t ROCA_HEIGHT = 20;
+
+// Bitmap simple estilo roca 
+const unsigned char rocaBitmap[] = {
+  0b00111100, 0b00000000,
+  0b01111110, 0b00000000,
+  0b11111111, 0b00000000,
+  0b11111111, 0b00000000,
+  0b11111111, 0b00000000,
+  0b11111111, 0b00000000,
+  0b01111110, 0b00000000,
+  0b00111100, 0b00000000,
+  0b00111100, 0b00000000,
+  0b01111110, 0b00000000,
+  0b11111111, 0b00000000,
+  0b11111111, 0b00000000,
+  0b11111111, 0b00000000,
+  0b11111111, 0b00000000,
+  0b01111110, 0b00000000,
+  0b00111100, 0b00000000,
+  0b00011000, 0b00000000,
+  0b00011000, 0b00000000,
+  0b00000000, 0b00000000,
+  0b00000000, 0b00000000,
+};
+
+class Roca {
+private:
+  int x, y;
+  int velocidad;
+
+public:
+  Roca(int startX, int startY, int vel = 8)
+    : x(startX), y(startY), velocidad(vel) {}
+
+  void dibujar() {
+    screen.drawBitmap(x, y, rocaBitmap, ROCA_WIDTH, ROCA_HEIGHT, ILI9341_WHITE);
+  }
+
+  void borrar() {
+    screen.drawBitmap(x, y, rocaBitmap, ROCA_WIDTH, ROCA_HEIGHT, ILI9341_BLACK);
+  }
+
+  void actualizar() {
+    borrar();
+    y += velocidad;
+    dibujar();
+  }
+
+  bool fueraDePantalla() {
+    return y > screen.height();
+  }
+
+  void reiniciar() {
+    borrar();
+    x = random(0, screen.width() - ROCA_WIDTH);
+    y = random(-60, -20);  // reaparece fuera de pantalla
+    velocidad = random(8, 16);  // velocidad aleatoria
+    dibujar();
+  }
+
+  int getX() const { return x; }
+  int getY() const { return y; }
+
+};
+
+#endif
