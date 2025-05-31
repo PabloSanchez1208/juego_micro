@@ -1,0 +1,79 @@
+#ifndef NAVE_H
+#define NAVE_H
+
+#include <Adafruit_ILI9341.h>
+#include "bala.h"
+
+extern Adafruit_ILI9341 screen;
+const unsigned char naveBitmap[] PROGMEM = {
+    0b00000000, 0b00000000,
+    0b00000100, 0b00100000,
+    0b00000100, 0b00100000,
+    0b00000100, 0b00100000,
+    0b00000100, 0b00100000,
+    0b00000111, 0b11100000,
+    0b00000111, 0b11100000,
+    0b00011111, 0b11111000,
+    0b00111111, 0b11111100,
+    0b00111111, 0b11111100,
+    0b00011110, 0b01111000,
+    0b00011110, 0b01111000,
+    0b00001100, 0b00110000,
+    0b00001100, 0b00110000,
+    0b00001000, 0b00010000,
+    0b00001000, 0b00010000
+  };
+  
+  #define NAVE_WIDTH  16
+  #define NAVE_HEIGHT 16
+  
+
+class Nave {
+    private:
+      int x, y;
+  
+    public:
+      Nave(int startX, int startY) : x(startX), y(startY) {}
+  
+      void dibujar() {
+        screen.drawBitmap(x, y, naveBitmap, NAVE_WIDTH, NAVE_HEIGHT, ILI9341_WHITE);
+      }
+  
+      void borrar() {
+        screen.drawBitmap(x, y, naveBitmap, NAVE_WIDTH, NAVE_HEIGHT, ILI9341_BLACK);
+      }
+  
+      void moverIzquierda(int paso = 22) {
+        if (x - paso >= 0) {
+          borrar();
+          x -= paso;
+          dibujar();
+        }
+      }
+  
+      void moverDerecha(int paso = 22) {
+        if (x + NAVE_WIDTH + paso <= screen.width()) {
+          borrar();
+          x += paso;
+          dibujar();
+        }
+      }
+
+      void reiniciar() {
+        borrar();     // Borra la nave en su posición actual
+        x = 100;      // Coordenada X inicial
+        y = 280;      // Coordenada Y inicial
+        dibujar();    // Dibuja la nave en la nueva posición
+      }
+
+
+      void disparar() {
+        
+      }
+      
+  
+      int getX() const { return x; }
+      int getY() const { return y; }
+  };
+  
+  #endif
